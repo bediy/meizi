@@ -14,7 +14,6 @@ public class RequestManager {
 
     private RequestQueue mRequestQueue;
     private static RequestManager sInstance;
-    private int method;
     private Builder mBuilder;
     private Controller mController;
 
