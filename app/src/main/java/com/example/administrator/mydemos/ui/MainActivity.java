@@ -7,18 +7,18 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
 import android.support.v4.util.Pair;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.android.volley.VolleyError;
 import com.example.administrator.mydemos.R;
+import com.example.administrator.mydemos.Request.RequestManager;
 import com.example.administrator.mydemos.adapter.AllDataRecyclerViewAdapter;
 import com.example.administrator.mydemos.adapter.AllDataRecyclerViewAdapter.NormalViewHolder;
 import com.example.administrator.mydemos.api.GankApi;
-import com.example.administrator.mydemos.api.Net;
 import com.example.administrator.mydemos.database.DBCommand;
 import com.example.administrator.mydemos.database.SQLiteDBHelper;
 import com.example.administrator.mydemos.model.AllData;
@@ -34,7 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseAppCompatActivity
-        implements AllDataRecyclerViewAdapter.onItemClickListener, BaseRecyclerView.OnScrollListener, Net.NetCallBack<AllData> {
+        implements AllDataRecyclerViewAdapter.onItemClickListener, BaseRecyclerView.OnScrollListener,RequestManager.ResponseCallBack<AllData> {
 
     private static final String TAG = "MainActivity";
 
@@ -110,8 +110,12 @@ public class MainActivity extends BaseAppCompatActivity
 
 
     private void postRequest() {
-        Net<AllData> dataNet = GankApi.getAllData(page, this);
-        dataNet.addToQueue(TAG);
+        RequestManager.volley()
+                .GET()
+                .URL(GankApi.getAllDataUrl(page))
+                .addCallBack(this)
+                .setTag(TAG)
+                .create(AllData.class);
     }
 
     @Override
@@ -158,10 +162,10 @@ public class MainActivity extends BaseAppCompatActivity
         public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
             if (startPosition != currPosition) {
 //                View view = layoutManager.findViewByPosition(currPosition);
-                RecyclerView.ViewHolder viewholder = recyclerView.findViewHolderForAdapterPosition(currPosition);
-                if (viewholder != null) {
+                RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(currPosition);
+                if (viewHolder != null) {
 //                    View sharedElement = view.findViewById(R.id.imageView);
-                    View sharedElement = ((NormalViewHolder) viewholder).getImageView();
+                    View sharedElement = ((NormalViewHolder) viewHolder).getImageView();
                     /*View navigationBar = findViewById(android.R.id.navigationBarBackground);
                     View statusBar = findViewById(android.R.id.statusBarBackground);
                     View actionBar = findViewById(android.support.v7.appcompat.R.id.action_bar_container);
@@ -245,5 +249,12 @@ public class MainActivity extends BaseAppCompatActivity
     public void onActivityReenter(int resultCode, Intent data) {
         super.onActivityReenter(resultCode, data);
         currPosition = data.getIntExtra(PhotoViewerActivity.EXTRA_CURRENT_POSITION, 0);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "destroyed...");
+        RequestManager.getInstance().cancelAllRequests(TAG);
     }
 }

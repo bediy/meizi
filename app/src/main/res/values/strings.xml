@@ -3,4 +3,6 @@
     <string name="load_no_more">没有更多内容</string>
     <string name="trans_image_name">image</string>
     <string name="trans_action_bar_name">action_bar</string>
+    <string name="title_activity_non_static_nested_class_leak">NonStaticNestedClassLeakActivity
+    </string>
 </resources>

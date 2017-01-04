@@ -168,20 +168,6 @@ public class PhotoViewerActivity extends AppCompatActivity implements ViewPagerA
                 // If the user has swiped to a different ViewPager page, then we need to
                 // remove the old shared element and replace it with the new shared element
                 // that should be transitioned instead.
-                /*View navigationBar = findViewById(android.R.id.navigationBarBackground);
-                View statusBar = findViewById(android.R.id.statusBarBackground);
-                View actionBar = findViewById(android.support.v7.appcompat.R.id.action_bar_container);
-                actionBar.setTransitionName(getString(R.string.trans_action_bar_name));
-                names.clear();
-                names.add(sharedElement.getTransitionName());
-                names.add(navigationBar.getTransitionName());
-                names.add(statusBar.getTransitionName());
-                names.add(actionBar.getTransitionName());
-                sharedElements.clear();
-                sharedElements.put(sharedElement.getTransitionName(), sharedElement);
-                sharedElements.put(navigationBar.getTransitionName(), navigationBar);
-                sharedElements.put(statusBar.getTransitionName(), statusBar);
-                sharedElements.put(actionBar.getTransitionName(), actionBar);*/
                 names.remove(names.indexOf(startTransitionName));
                 names.add(sharedElement.getTransitionName());
                 sharedElements.remove(startTransitionName);

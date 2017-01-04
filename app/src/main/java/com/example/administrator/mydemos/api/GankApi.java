@@ -29,7 +29,7 @@ public class GankApi {
         Type type = new TypeToken<AllData>() {
         }.getType();
 
-        String url = new StringBuffer()
+        String url = new StringBuilder()
                 .append("http://gank.io/api/data/")
                 .append(DATA_TYPE + "/")
                 .append(String.valueOf(DATA_NUM) + "/")
@@ -39,15 +39,24 @@ public class GankApi {
         return new Net(Request.Method.GET, url, type, netCallBack, null);
     }
 
+    public static String getAllDataUrl(int page) {
+        return new StringBuilder()
+                .append("http://gank.io/api/data/")
+                .append(DATA_TYPE + "/")
+                .append(String.valueOf(DATA_NUM) + "/")
+                .append(String.valueOf(page))
+                .toString();
+    }
+
     public void getdata() {
-        String url = new StringBuffer()
+        String url = new StringBuilder()
                 .append("http://gank.io/api/data/")
                 .append(DATA_TYPE + "/")
                 .append(String.valueOf(DATA_NUM) + "/")
                 .append(String.valueOf(1))
                 .toString();
 
-        RequestManager.RequestCallBack<AllData> callBack = new RequestManager.RequestCallBack<AllData>() {
+        RequestManager.ResponseCallBack<AllData> callBack = new RequestManager.ResponseCallBack<AllData>() {
             @Override
             public void onResponse(AllData response) {
 
@@ -58,11 +67,5 @@ public class GankApi {
 
             }
         };
-
-        RequestManager.getInstance()
-                .GET()
-                .URL(url)
-                .addCallBack(callBack)
-                .create(null).start();
     }
 }

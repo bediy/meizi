@@ -18,14 +18,14 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        mContext = this;
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
             return;
         }
         LeakCanary.install(this);
-//        RequestManager.getInstance().initRequestQueue(this);
+        mContext = this;
+        RequestManager.getInstance().initRequestQueue(this);
     }
 
     public static App getContext() {

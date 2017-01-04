@@ -2,6 +2,7 @@ package com.example.administrator.mydemos.Request;
 
 import android.content.Context;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
@@ -20,14 +21,14 @@ public class RequestManager {
     public RequestManager() {
 //        mBuilder = new Builder();
         mController = new Controller();
-        mBuilder = new VolleyBuilder(mController, this);
+        mBuilder = new VolleyBuilder(mController);
     }
 
     public void setBuilder(Builder builder) {
         mBuilder = builder;
     }
 
-    public static VolleyBuilder getInstance() {
+    public static RequestManager getInstance() {
         if (sInstance == null) {
             synchronized (RequestManager.class) {
                 if (sInstance == null) {
@@ -35,7 +36,13 @@ public class RequestManager {
                 }
             }
         }
-        return (VolleyBuilder)(sInstance.getBuilder());
+        return sInstance;
+    }
+
+    public static Builder volley() {
+        Builder builder = sInstance.getBuilder();
+        builder.reset();
+        return builder;
     }
 
     public RequestQueue initRequestQueue(Context context) {
@@ -53,70 +60,24 @@ public class RequestManager {
         return mBuilder;
     }
 
-    /*class Builder {
-        private int method;
-        private RequestCallBack tRequestCallBack;
-        private String url;
-        private GsonRequest request;
-
-        public Builder() {
-        }
-
-        public Builder GET() {
-            method = Request.Method.GET;
-            return this;
-        }
-
-        public Builder POST() {
-            method = Request.Method.POST;
-            return this;
-        }
-
-        private Builder url(String s) {
-            url = s;
-            return this;
-        }
-
-        private void addCallBack(RequestCallBack callBack) {
-            tRequestCallBack = callBack;
-        }
-
-        private <T> Controller create(T t, Type type) {
-
-
-
-            Response.Listener listener = new Response.Listener<T>() {
-                @Override
-                public void onResponse(T response) {
-                    tRequestCallBack.onResponse(response);
-                }
-            };
-
-            Response.ErrorListener errorListener = new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    tRequestCallBack.onErrorResponse(error);
-                }
-            };
-
-            request = new GsonRequest<T>(method, url, listener, errorListener, type);
-            return mController;
-        }
-
-        protected GsonRequest getRequest() {
-            return request;
-        }
-
-    }*/
-
-    public class Controller {
-        public void start() {
-            getRequestQueue().add(((VolleyBuilder)mBuilder).getRequest());
-        }
+    public void cancelAllRequests(String tag) {
+        mController.cancelAll(tag);
     }
 
+    class Controller {
 
-    public interface RequestCallBack<T> {
+        void start(Request request) {
+            getRequestQueue().add(request);
+        }
+
+        void cancelAll(String tag) {
+            getBuilder().reset();
+            getRequestQueue().cancelAll(tag);
+        }
+
+    }
+
+    public interface ResponseCallBack<T> {
         void onResponse(T response);
         void onErrorResponse(VolleyError error);
     }

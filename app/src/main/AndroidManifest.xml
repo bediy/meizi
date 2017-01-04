@@ -28,8 +28,9 @@
         <activity
             android:name=".ui.GirlsPhotoViewerActivity"
             android:theme="@style/PhotoTheme" />
-        <activity android:name=".ui.PhotoViewerActivity"
-            android:theme="@style/PhotoTheme"></activity>
+        <activity
+            android:name=".ui.PhotoViewerActivity"
+            android:theme="@style/PhotoTheme" />
     </application>
 
 </manifest>

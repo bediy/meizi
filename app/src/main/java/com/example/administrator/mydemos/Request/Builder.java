@@ -1,15 +1,30 @@
 package com.example.administrator.mydemos.Request;
 
 
+import java.util.Map;
+
 /**
  * Created by Administrator on 2016/6/29.
  */
-public interface Builder {
+public abstract class Builder {
 
-    Builder GET();
-    Builder POST();
-    <T> Builder addCallBack(final RequestManager.RequestCallBack<T> callBack);
-    <T> RequestManager.Controller create(Class<? super T> aClass);
-    Builder create();
-    Builder URL(String url);
+    public abstract Builder GET();
+    public abstract Builder POST();
+    public abstract Builder URL(String url);
+    public abstract Builder setParams(Map<String, String> params);
+    public abstract <T> Builder addCallBack(RequestManager.ResponseCallBack<T> callBack);
+    public abstract RequestManager.Controller create();
+    public abstract <T> RequestManager.Controller create(Class<T> tClass);
+
+    void reset() {
+
+    }
+
+    void assertNotNull() {
+
+    }
+
+    public Builder setTag(String tag) {
+        return null;
+    }
 }

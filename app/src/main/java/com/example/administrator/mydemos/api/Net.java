@@ -24,9 +24,8 @@ public class Net<T> {
 
     public Net(int method, String url, Type type, final NetCallBack<T> callBack, final Map<String, String> params) {
 
-
-
         Response.Listener listener = new Response.Listener<T>() {
+
             @Override
             public void onResponse(T response) {
                 callBack.onResponse(response);
@@ -40,7 +39,7 @@ public class Net<T> {
             }
         };
 
-        this.tGsonRequest = new GsonRequest<T>(method, url, listener, errorListener, type) {
+        this.tGsonRequest = new GsonRequest<T>(method, url, listener, errorListener, null) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 return params;
@@ -49,6 +48,7 @@ public class Net<T> {
 
 
     }
+
 
     public void addToQueue(String tag) {
         tGsonRequest.setTag(tag);
@@ -64,7 +64,7 @@ public class Net<T> {
         addToQueue(request);
     }
 
-    public void cancelAllRequests(String tag) {
+    public static void cancelAllRequests(String tag) {
         App.getContext().getRequestQueue().cancelAll(tag);
     }
 
