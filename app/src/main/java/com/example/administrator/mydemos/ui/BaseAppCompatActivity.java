@@ -16,8 +16,8 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     }
 
     protected void init() {
-        setupWindowAnimations();
         setContentView();
+        setupWindowAnimations();
         setupViews();
     }
 

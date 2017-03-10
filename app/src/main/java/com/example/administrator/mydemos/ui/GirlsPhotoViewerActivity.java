@@ -72,7 +72,7 @@ public class GirlsPhotoViewerActivity extends AppCompatActivity implements View.
     }
 
     private void setupWindowAnimations() {
-//        Fade fade = (Fade) TransitionInflater.from(this).inflateTransition(R.transition.activity_fade);
+//        Fade fade = (Fade) TransitionInflater.from(this).inflateTransition(R.transition.activity_fade_in);
 //        getWindow().setEnterTransition(fade);
         /*Fade fade = new Fade();
         fade.setDuration(500);

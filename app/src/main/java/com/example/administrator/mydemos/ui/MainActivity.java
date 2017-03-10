@@ -10,6 +10,9 @@ import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Fade;
+import android.transition.TransitionInflater;
+import android.transition.Visibility;
 import android.util.Log;
 import android.view.View;
 
@@ -62,8 +65,6 @@ public class MainActivity extends BaseAppCompatActivity
         setExitSharedElementCallback(new OnSharedElementCallback());
         mContext = this;
 
-        setSupportActionBar(toolbar);
-
 
         mSqLiteDBHelper = new SQLiteDBHelper(getApplicationContext());
 //        mSqLiteDBHelper.insertStudents();
@@ -91,6 +92,7 @@ public class MainActivity extends BaseAppCompatActivity
     protected void setContentView() {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
     }
 
     @Override
@@ -196,19 +198,26 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Override
     protected void setupWindowAnimations() {
-//        Fade fade = (Fade) TransitionInflater.from(this).inflateTransition(R.transition.activity_fade);
-//        getWindow().setExitTransition(fade);
+//        Fade fadeOut = (Fade) TransitionInflater.from(this).inflateTransition(R.transition.activity_fade_out);
+        Fade fadeIn = (Fade) TransitionInflater.from(this).inflateTransition(R.transition.activity_fade_in);
+        getWindow().setExitTransition(fadeIn);
+        getWindow().setEnterTransition(fadeIn);
 //        Slide slide = (Slide) TransitionInflater.from(this).inflateTransition(R.transition.activity_slide);
 //        getWindow().setExitTransition(slide);
         /*Slide slide = new Slide();
         slide.setDuration(500);
         slide.setSlideEdge(android.view.Gravity.LEFT);
         slide.setMode(Visibility.MODE_OUT);
-       /* TransitionSet transform = (TransitionSet) TransitionInflater.from(this).inflateTransition(R.transition.change_image_transform);
-        getWindow().setSharedElementEnterTransition(transform);
-        getWindow().setSharedElementExitTransition(transform);
-        getWindow().setAllowEnterTransitionOverlap(true);
-        getWindow().setAllowReturnTransitionOverlap(true);*/
+        */
+        /*Fade fade = new Fade();
+        fade.setDuration(1000);
+        fade.setMode(Visibility.MODE_OUT);
+        getWindow().setExitTransition(fade);
+        Fade fadeReturn = new Fade();
+        fadeReturn.setDuration(1000);
+        fadeReturn.setMode(Visibility.MODE_IN);
+        getWindow().setReturnTransition(fadeReturn);*/
+
     }
 
 
@@ -221,14 +230,14 @@ public class MainActivity extends BaseAppCompatActivity
         intent.putExtra(PhotoViewerActivity.EXTRA_LAST_VISIBLE_POSITION, layoutManager.findLastVisibleItemPosition());
         intent.putExtra(PhotoViewerActivity.EXTRA_START_TRANSITION_NAME, startTransitionName = view.getTransitionName());
         intent.putExtra(PhotoViewerActivity.EXTRA_CURR_PAGE, page);
-        View decor = getWindow().getDecorView();
-        View navigationBar = decor.findViewById(android.R.id.navigationBarBackground);
-        View statusBar = decor.findViewById(android.R.id.statusBarBackground);
-        Pair<View, String> imageElements = Pair.create(view, view.getTransitionName());
-        Pair<View, String> navigationBarElements = Pair.create(navigationBar, navigationBar.getTransitionName());
-        Pair<View, String> statusBarElements = Pair.create(statusBar, statusBar.getTransitionName());
-        Pair<View, String> toolbarElements = Pair.create((View) toolbar, toolbar.getTransitionName());
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, imageElements, toolbarElements, navigationBarElements, statusBarElements);
+//        View decor = getWindow().getDecorView();
+//        View navigationBar = decor.findViewById(android.R.id.navigationBarBackground);
+//        View statusBar = decor.findViewById(android.R.id.statusBarBackground);
+//        Pair<View, String> navigationBarElements = Pair.create(navigationBar, navigationBar.getTransitionName());
+//        Pair<View, String> statusBarElements = Pair.create(statusBar, statusBar.getTransitionName());
+//        Pair<View, String> toolbarElements = Pair.create((View) toolbar, toolbar.getTransitionName());
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                Pair.create(view, view.getTransitionName()));
         startActivity(intent, options.toBundle());
     }
 
@@ -254,7 +263,6 @@ public class MainActivity extends BaseAppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "destroyed...");
         RequestManager.getInstance().cancelAllRequests(TAG);
     }
 }

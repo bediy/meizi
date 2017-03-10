@@ -3,11 +3,10 @@ package com.example.administrator.mydemos.Request;
 import android.support.annotation.NonNull;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.RequestFuture;
-import com.example.administrator.mydemos.model.AllData;
 
 import java.lang.ref.WeakReference;
 import java.util.Map;
@@ -24,12 +23,12 @@ final class VolleyBuilder extends Builder {
     private int method = GET;
     private String url;
     private GsonRequest request;
-    private Response.Listener mListener;
-    private Response.ErrorListener mErrorListener;
-    private RequestManager.ResponseCallBack mCallBack;
+    private Listener mListener;
+    private ErrorListener mErrorListener;
     private RequestManager.Controller mController;
     private Map<String, String> mParams;
     private String mTag;
+    private int mTimeout = DefaultRetryPolicy.DEFAULT_TIMEOUT_MS;
 
     VolleyBuilder(RequestManager.Controller controller) {
         mController = controller;
@@ -68,70 +67,30 @@ final class VolleyBuilder extends Builder {
         return this;
     }
 
+
     @Override
     public Builder setTag(String tag) {
         mTag = tag;
         return this;
     }
 
+
+    /**
+     * @param sec 毫秒
+     * @return Builder$this
+     */
     @Override
-    public <T> Builder addCallBack(@NonNull final RequestManager.ResponseCallBack<T> callBack) {
-
-        mCallBack = callBack;
-
-        mListener = new Response.Listener<T>() {
-            @Override
-            public void onResponse(T response) {
-                mCallBack.onResponse(response);
-            }
-        };
-
-        mErrorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                mCallBack.onErrorResponse(error);
-            }
-        };
-
-//        mListener = new Listener<>(callBack);
-//        mErrorListener = new ErrorListener(callBack);
+    public Builder setTimeout(int sec) {
+        mTimeout = sec;
         return this;
     }
 
-    private static class Listener<T> implements Response.Listener<T> {
-
-        private WeakReference<RequestManager.ResponseCallBack<T>> weakReference;
-
-        public Listener(RequestManager.ResponseCallBack<T> callBack) {
-            this.weakReference = new WeakReference<>(callBack);
-        }
-
-        @Override
-        public void onResponse(T response) {
-            final RequestManager.ResponseCallBack<T> callBack = weakReference.get();
-            if (callBack != null) {
-                callBack.onResponse(response);
-            }
-        }
+    @Override
+    public <T> Builder addCallBack(@NonNull final RequestManager.ResponseCallBack<T> callBack) {
+        mListener = new Listener<>(callBack);
+        mErrorListener = new ErrorListener(callBack);
+        return this;
     }
-
-    private static class ErrorListener implements Response.ErrorListener {
-
-        private WeakReference<RequestManager.ResponseCallBack> weakReference;
-
-        public ErrorListener(RequestManager.ResponseCallBack callBack) {
-            this.weakReference = new WeakReference<>(callBack);
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            final RequestManager.ResponseCallBack callBack = weakReference.get();
-            if (callBack != null) {
-                callBack.onErrorResponse(error);
-            }
-        }
-    }
-
 
     @Override
     public RequestManager.Controller create() {
@@ -150,6 +109,10 @@ final class VolleyBuilder extends Builder {
         };
         if (mTag != null)
             request.setTag(mTag);
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                mTimeout,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 //        自动启动请求
         mController.start(request);
         return mController;
@@ -161,7 +124,7 @@ final class VolleyBuilder extends Builder {
         url = null;
         mParams = null;
         mTag = null;
-        mCallBack = null;
+        mListener = null;
     }
 
     @Override
@@ -169,7 +132,7 @@ final class VolleyBuilder extends Builder {
         if (url == null)
             throw new IllegalArgumentException("Url must not null");
 
-        if (mCallBack == null)
+        if (mListener == null)
             throw new IllegalArgumentException("The Listener of the ResponseCallBack must not null");
 
         if (method == Request.Method.POST) {
@@ -179,5 +142,38 @@ final class VolleyBuilder extends Builder {
         }
     }
 
+    private static class Listener<T> implements Response.Listener<T> {
+
+        private WeakReference<RequestManager.ResponseCallBack<T>> weakReference;
+
+        Listener(RequestManager.ResponseCallBack<T> callBack) {
+            this.weakReference = new WeakReference<>(callBack);
+        }
+
+        @Override
+        public void onResponse(T response) {
+            final RequestManager.ResponseCallBack<T> callBack = weakReference.get();
+            if (callBack != null) {
+                callBack.onResponse(response);
+            }
+        }
+    }
+
+    private static class ErrorListener implements Response.ErrorListener {
+
+        private WeakReference<RequestManager.ResponseCallBack> weakReference;
+
+        ErrorListener(RequestManager.ResponseCallBack callBack) {
+            this.weakReference = new WeakReference<>(callBack);
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            final RequestManager.ResponseCallBack callBack = weakReference.get();
+            if (callBack != null) {
+                callBack.onErrorResponse(error);
+            }
+        }
+    }
 
 }

@@ -27,4 +27,8 @@ public abstract class Builder {
     public Builder setTag(String tag) {
         return null;
     }
+
+    public Builder setTimeout(int sec) {
+        return null;
+    }
 }

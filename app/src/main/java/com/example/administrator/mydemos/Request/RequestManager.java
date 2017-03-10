@@ -70,7 +70,6 @@ public class RequestManager {
         }
 
         void cancelAll(String tag) {
-            getBuilder().reset();
             getRequestQueue().cancelAll(tag);
         }
 

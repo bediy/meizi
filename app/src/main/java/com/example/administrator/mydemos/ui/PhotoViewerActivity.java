@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
+import android.transition.TransitionInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,6 +67,8 @@ public class PhotoViewerActivity extends AppCompatActivity implements ViewPagerA
         setContentView(R.layout.activity_photo_viewer);
         setEnterSharedElementCallback(new OnSharedElementCallback());
 
+        setSupportActionBar(toolbar);
+
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
@@ -94,10 +97,12 @@ public class PhotoViewerActivity extends AppCompatActivity implements ViewPagerA
         Slide slide = new Slide();
         slide.setDuration(500);*/
 //        getWindow().setEnterTransition(null);
-        Fade fade = new Fade();
+       /* Fade fade = new Fade();
         fade.setDuration(200);
         getWindow().setReturnTransition(fade);
-        getWindow().setExitTransition(fade);
+        getWindow().setExitTransition(fade);*/
+//        Fade fadeIn = (Fade) TransitionInflater.from(this).inflateTransition(R.transition.activity_fade_out);
+//        getWindow().setReturnTransition(fadeIn);
     }
 
     @Override
