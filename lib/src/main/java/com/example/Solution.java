@@ -35,7 +35,7 @@ public class Solution {
 
     public static ListNode ReverseList(ListNode head) {
         ListNode pre = null;
-        ListNode next = null;
+        ListNode next;
 
         while (head != null) {
             next = head.next;
