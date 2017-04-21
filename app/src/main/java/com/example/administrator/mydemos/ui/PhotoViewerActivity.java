@@ -10,8 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.transition.Fade;
-import android.transition.TransitionInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +17,7 @@ import android.view.ViewTreeObserver;
 
 import com.android.volley.VolleyError;
 import com.example.administrator.mydemos.R;
-import com.example.administrator.mydemos.adapter.ViewPagerAdapter;
+import com.example.administrator.mydemos.adapter.PhotoViewerAdapter;
 import com.example.administrator.mydemos.api.GankApi;
 import com.example.administrator.mydemos.api.Net;
 import com.example.administrator.mydemos.model.AllData;
@@ -33,7 +31,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PhotoViewerActivity extends AppCompatActivity implements ViewPagerAdapter.OnItemListener, Net.NetCallBack<AllData> {
+public class PhotoViewerActivity extends AppCompatActivity implements PhotoViewerAdapter.OnItemListener, Net.NetCallBack<AllData> {
 
     private static final String TAG = PhotoViewerActivity.class.getSimpleName();
     public static final String EXTRA_LIST = "list";
@@ -48,7 +46,7 @@ public class PhotoViewerActivity extends AppCompatActivity implements ViewPagerA
     ViewPager viewPager;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    private ViewPagerAdapter adapter;
+    private PhotoViewerAdapter adapter;
     private ArrayList<Results> list;
     private SwipePhotoView sharedElement;
     private int startPosition;
@@ -84,7 +82,7 @@ public class PhotoViewerActivity extends AppCompatActivity implements ViewPagerA
         startTransitionName = getIntent().getStringExtra(EXTRA_START_TRANSITION_NAME);
         page = getIntent().getIntExtra(EXTRA_CURR_PAGE, 0);
 
-        viewPager.setAdapter(adapter = new ViewPagerAdapter(this, list));
+        viewPager.setAdapter(adapter = new PhotoViewerAdapter(this, list));
         viewPager.setCurrentItem(startPosition);
         viewPager.addOnPageChangeListener(new PageChangeListener());
         adapter.setOnItemListener(this);

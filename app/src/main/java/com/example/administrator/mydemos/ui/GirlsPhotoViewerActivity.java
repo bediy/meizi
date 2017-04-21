@@ -16,6 +16,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.example.administrator.mydemos.R;
+import com.example.administrator.mydemos.Request.RequestManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,7 +46,7 @@ public class GirlsPhotoViewerActivity extends AppCompatActivity implements View.
         Intent intent = getIntent();
 
         attacher = new PhotoViewAttacher(imageView);
-        Glide
+        /*Glide
                 .with(this)
                 .load(intent.getStringExtra(KEY_URL))
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
@@ -53,6 +54,17 @@ public class GirlsPhotoViewerActivity extends AppCompatActivity implements View.
                     @Override
                     public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
                         super.onResourceReady(resource, animation);
+                        attacher.update();
+                        scheduleStartPostponedTransition(imageView);
+                    }
+                });*/
+        RequestManager.loadImage(
+                this,
+                intent.getStringExtra(KEY_URL),
+                imageView,
+                new RequestManager.ResourceCallBack() {
+                    @Override
+                    public void onImageReady() {
                         attacher.update();
                         scheduleStartPostponedTransition(imageView);
                     }

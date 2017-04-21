@@ -25,9 +25,9 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 /**
  * Created by Administrator on 2016/8/3.
  */
-public class ViewPagerAdapter extends PagerAdapter implements View.OnTouchListener {
+public class PhotoViewerAdapter extends PagerAdapter implements View.OnTouchListener {
 
-    private static final String TAG = ViewPagerAdapter.class.getSimpleName();
+    private static final String TAG = PhotoViewerAdapter.class.getSimpleName();
 
     private List<Results> results;
     private AppCompatActivity context;
@@ -36,7 +36,7 @@ public class ViewPagerAdapter extends PagerAdapter implements View.OnTouchListen
     private OnItemListener onItemListener;
 
 
-    public ViewPagerAdapter(AppCompatActivity context, List<Results> list) {
+    public PhotoViewerAdapter(AppCompatActivity context, List<Results> list) {
         this.results = list;
         this.context = context;
     }

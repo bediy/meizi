@@ -44,26 +44,26 @@ public class Linked {
         h = ReverseList(h.next);
         Node q = h;
         /*while (q != null) {
-            System.out.print(q.n + " ");
+            System.out.print(q.a + " ");
             q = q.next;
         }*/
 
         /*Node p = h.next;
 
         Node insert = new Node();
-        insert.n = 3;*/
+        insert.a = 3;*/
         /*while (p != null) {
             if (p.next != null) {
-                if (insert.n > p.n && insert.n < p.next.n) {
+                if (insert.a > p.a && insert.a < p.next.a) {
                     insert.next = p.next;
                     p.next = insert;
                     break;
-                } else if (insert.n < p.n) {
+                } else if (insert.a < p.a) {
                     insert.next = h.next;
                     h.next = insert;
                     break;
                 }
-            } else if (insert.n > p.n) {
+            } else if (insert.a > p.a) {
                 p.next = insert;
             }
             p = p.next;

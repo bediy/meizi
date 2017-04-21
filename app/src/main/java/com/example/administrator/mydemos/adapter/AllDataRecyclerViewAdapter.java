@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.administrator.mydemos.R;
+import com.example.administrator.mydemos.Request.RequestManager;
 import com.example.administrator.mydemos.model.Results;
 
 import java.util.List;
@@ -80,10 +81,11 @@ public class AllDataRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof NormalViewHolder) {
             NormalViewHolder viewHolder = (NormalViewHolder) holder;
-            Glide.with(mContext)
+            /*Glide.with(mContext)
                     .load(mList.get(position).getUrl())
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .into(viewHolder.imageView);
+                    .into(viewHolder.imageView);*/
+            RequestManager.loadImage(mContext, mList.get(position).getUrl(), viewHolder.imageView);
             viewHolder.imageView.setTransitionName(mList.get(position).getUrl());
             viewHolder.imageView.setTag(R.id.imageView, position);
             viewHolder.descTextView.setText(mList.get(position).getDesc());

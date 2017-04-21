@@ -249,19 +249,19 @@ public class TreeNode {
 
     public static void main(String[] args) {
         /*Node node = null;
-        for (int value : n) {
+        for (int value : a) {
             node = insertNode(node, value);
         }
 
-        System.out.print("height:" + getHeight(node) + "\n");
-        System.out.print("leaf count:" + getLeafCount(node) + "\n");
+        System.out.print("height:" + getHeight(node) + "\a");
+        System.out.print("leaf count:" + getLeafCount(node) + "\a");
         printNode(node);*/
 
-//        quickSort(n, 0, n.length - 1);
+//        quickSort(a, 0, a.length - 1);
 
-        /*quickSortCopy(n, 0, n.length - 1);
-        for (int i = 0; i < n.length; i++) {
-            System.out.print(n[i] + ", ");
+        /*quickSortCopy(a, 0, a.length - 1);
+        for (int i = 0; i < a.length; i++) {
+            System.out.print(a[i] + ", ");
         }*/
 
 //        pickPrimeNumber();

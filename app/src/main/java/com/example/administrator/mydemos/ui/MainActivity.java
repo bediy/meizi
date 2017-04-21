@@ -12,11 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
 import android.transition.TransitionInflater;
-import android.transition.Visibility;
-import android.util.Log;
 import android.view.View;
 
-import com.android.volley.VolleyError;
 import com.example.administrator.mydemos.R;
 import com.example.administrator.mydemos.Request.RequestManager;
 import com.example.administrator.mydemos.adapter.AllDataRecyclerViewAdapter;
@@ -114,7 +111,7 @@ public class MainActivity extends BaseAppCompatActivity
     private void postRequest() {
         RequestManager.volley()
                 .GET()
-                .URL(GankApi.getAllDataUrl(page))
+                .URL(GankApi.getMeiziDataUrl(page))
                 .addCallBack(this)
                 .setTag(TAG)
                 .create(AllData.class);
@@ -134,10 +131,9 @@ public class MainActivity extends BaseAppCompatActivity
     }
 
     @Override
-    public void onErrorResponse(VolleyError error) {
+    public void onErrorResponse(RequestManager.Error error) {
         recyclerView.setIsInTheBottom(false);
     }
-
 
     @Override
     public void onDescClickListener(int position, View view) {

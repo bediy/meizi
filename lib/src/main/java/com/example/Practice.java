@@ -141,7 +141,7 @@ public class Practice {
 
         /*Node node = null;
 
-        for (int value : n) {
+        for (int value : a) {
             node = createTree(node, value);
         }
 

@@ -1,11 +1,17 @@
 package com.example.administrator.mydemos.Request;
 
 import android.content.Context;
+import android.widget.ImageView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 /**
  * Created by Administrator on 2016/6/21.
@@ -23,9 +29,7 @@ public class RequestManager {
         mBuilder = new VolleyBuilder(mController);
     }
 
-    public void setBuilder(Builder builder) {
-        mBuilder = builder;
-    }
+
 
     public static RequestManager getInstance() {
         if (sInstance == null) {
@@ -36,6 +40,31 @@ public class RequestManager {
             }
         }
         return sInstance;
+    }
+
+    public static void loadImage(Context context, String url, ImageView imageView) {
+        Glide.with(context)
+                .load(url)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(imageView);
+    }
+
+    public static void loadImage(Context context, String url, ImageView imageView, final ResourceCallBack resourceCallBack) {
+        Glide
+                .with(context)
+                .load(url)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(new GlideDrawableImageViewTarget(imageView) {
+                    @Override
+                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+                        super.onResourceReady(resource, animation);
+                        resourceCallBack.onImageReady();
+                    }
+                });
+    }
+
+    public void setBuilder(Builder builder) {
+        mBuilder = builder;
     }
 
     public static Builder volley() {
@@ -64,19 +93,26 @@ public class RequestManager {
     }
 
     class Controller {
-
         void start(Request request) {
             getRequestQueue().add(request);
         }
-
         void cancelAll(String tag) {
             getRequestQueue().cancelAll(tag);
         }
-
     }
 
     public interface ResponseCallBack<T> {
         void onResponse(T response);
-        void onErrorResponse(VolleyError error);
+        void onErrorResponse(Error error);
     }
+
+    public static class Error {
+        public Error(VolleyError error) {
+        }
+    }
+
+    public interface ResourceCallBack {
+        void onImageReady();
+    }
+
 }

@@ -8,6 +8,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import com.example.administrator.mydemos.Request.RequestManager.Error;
+
 import java.lang.ref.WeakReference;
 import java.util.Map;
 
@@ -21,22 +23,14 @@ import static com.android.volley.Request.Method.POST;
 final class VolleyBuilder extends Builder {
 
     private int method = GET;
-    private String url;
     private GsonRequest request;
     private Listener mListener;
     private ErrorListener mErrorListener;
-    private RequestManager.Controller mController;
-    private Map<String, String> mParams;
-    private String mTag;
-    private int mTimeout = DefaultRetryPolicy.DEFAULT_TIMEOUT_MS;
+
 
     VolleyBuilder(RequestManager.Controller controller) {
-        mController = controller;
-    }
-
-    public VolleyBuilder(RequestManager.Controller controller, RequestManager requestManager) {
-        mController = controller;
-        mController = requestManager.new Controller();
+        super(controller);
+        setTimeout(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS);
     }
 
     protected GsonRequest getRequest() {
@@ -52,36 +46,6 @@ final class VolleyBuilder extends Builder {
     @Override
     public Builder POST() {
         method = POST;
-        return this;
-    }
-
-    @Override
-    public Builder URL(String s) {
-        url = s;
-        return this;
-    }
-
-    @Override
-    public Builder setParams(Map<String, String> params) {
-        mParams = params;
-        return this;
-    }
-
-
-    @Override
-    public Builder setTag(String tag) {
-        mTag = tag;
-        return this;
-    }
-
-
-    /**
-     * @param sec 毫秒
-     * @return Builder$this
-     */
-    @Override
-    public Builder setTimeout(int sec) {
-        mTimeout = sec;
         return this;
     }
 
@@ -119,22 +83,17 @@ final class VolleyBuilder extends Builder {
     }
 
     @Override
-    void reset() {
+    protected void reset() {
+        super.reset();
         method = GET;
-        url = null;
-        mParams = null;
-        mTag = null;
         mListener = null;
     }
 
     @Override
-    void assertNotNull() {
-        if (url == null)
-            throw new IllegalArgumentException("Url must not null");
-
+    protected void assertNotNull() {
+        super.assertNotNull();
         if (mListener == null)
             throw new IllegalArgumentException("The Listener of the ResponseCallBack must not null");
-
         if (method == Request.Method.POST) {
             if (mParams == null) {
                 throw new IllegalArgumentException("Params must not null");
@@ -171,7 +130,7 @@ final class VolleyBuilder extends Builder {
         public void onErrorResponse(VolleyError error) {
             final RequestManager.ResponseCallBack callBack = weakReference.get();
             if (callBack != null) {
-                callBack.onErrorResponse(error);
+                callBack.onErrorResponse(new Error(error));
             }
         }
     }
